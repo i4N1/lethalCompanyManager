@@ -10,8 +10,8 @@ from threading import Thread
 # Settings
 
 url = 'https://thunderstore.io/api/experimental/package/'
-namespaces = ['notnotnotswipez', 'FlipMods', 'FlipMods', 'FlipMods', 'RugbugRedfern', '2018']
-names = ['MoreCompany', 'ReservedItemSlotCore', 'ReservedFlashlightSlot', 'ReservedWalkieSlot', 'Skinwalkers', 'LC_API']
+namespaces = ['notnotnotswipez', 'FlipMods', 'FlipMods', 'FlipMods', 'RugbugRedfern']
+names = ['MoreCompany', 'ReservedItemSlotCore', 'ReservedFlashlightSlot', 'ReservedWalkieSlot', 'Skinwalkers']
 mods_dir = '/tmp/lethalModManager/'
 plugins = f'{mods_dir}BepInEx/plugins/'
 
@@ -28,7 +28,7 @@ def downloadMods(namespace, name):
         download_url = latest["download_url"]
         p = log.progress(f'Downloading {name}... ')
         try:
-            rdown = requests.get(download_url)
+            rdown = requests.get(download_url, allow_redirects=True)
             p.success("\t\tDownload successful!")
         except:
             p.failure(f"Failed to download {name} ({download_url})")
@@ -50,11 +50,26 @@ def unzipMods():
             except FileExistsError:
                 log.failure(f"{dll} already exists in {plugins}...")
 
+def zipBepInEx():
+    p = log.progress(f'Zipping BepInEx folder... ')
+    with zipfile.ZipFile(mods_dir+"BepInEx.zip", 'w', zipfile.ZIP_DEFLATED) as zipf:
+        for foldername, subfolders, filenames in os.walk(mods_dir+"BepInEx"):
+            for filename in filenames:
+                relative_path = os.path.relpath(os.path.join(foldername, filename), mods_dir+"BepInEx")
+                zipf.write(os.path.join(foldername, filename), arcname=relative_path)
+    p.success("Done!")
+
 def clearFiles():
-    log.info("Clearing all files.")
+    p = log.progress(f'Clearing all files... ')
     for file in os.listdir(mods_dir):
         if file != "BepInEx":
             os.remove(mods_dir + file)
+    p.success("Done!")
+
+def moveZippedFile():
+    p = log.progress(f'Moving files... ')
+    os.rename(mods_dir+"BepInEx.zip", "/var/www/metacalled.tech/cdn.metacalled.tech/public/uploads/BepInEx.zip")
+    p.success("Done!")
 
 def main():
     if not os.path.isdir(mods_dir):
@@ -66,7 +81,9 @@ def main():
     for thread in threads:
         thread.join() # Lock program until all threads have finished.
     unzipMods() # Unzips all downloaded mods and adds them up into BepInEx
-    clearFiles() # Clear all files from the folder except BepInEx
+    clearFiles() # Clear all files from the folder except BepInExzipBepInEx()
+    zipBepInEx()
+    moveZippedFile()
 
 if __name__ == "__main__":
     main()
