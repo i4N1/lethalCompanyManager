@@ -23,9 +23,7 @@ def downloadMods(namespace, name):
     mod_dir = f'{mods_dir}{name}.zip'
     r = requests.get(f'{url}{namespace}/{name}/')
     if r.status_code == 200:
-        match = re.search(r'"latest":\s*({[^}]+})', r.text)
-        latest = match.group(1)
-        latest = json.loads(latest)
+        latest = r.json()["latest"]
         download_url = latest["download_url"]
         p = log.progress(f'Downloading {name}... ')
         try:
