@@ -1,7 +1,6 @@
 import zipfile
 import os
 import requests
-import json
 import re
 import time
 from pathlib import Path
@@ -23,12 +22,13 @@ def downloadMods(namespace, name):
     mod_dir = f'{mods_dir}{name}.zip'
     r = requests.get(f'{url}{namespace}/{name}/')
     if r.status_code == 200:
+        match = re.search(r'"latest":\s*({[^}]+})', r.text)
         latest = r.json()["latest"]
         download_url = latest["download_url"]
         p = log.progress(f'Downloading {name}... ')
         try:
             rdown = requests.get(download_url, allow_redirects=True)
-            p.success("\tDownload successful.")
+            p.success("\t\tDownload successful!")
         except:
             p.failure(f"Failed to download {name} ({download_url})")
         with open(mod_dir, 'wb') as file:
@@ -37,7 +37,6 @@ def downloadMods(namespace, name):
         print(f"Error, status code: {r.status_code}.")
         
 def unzipMods():
-    print(mods_dir)
     for zip in os.listdir(mods_dir):
         if zip.endswith(".zip"):
             zip_path = os.path.join(mods_dir, zip)
