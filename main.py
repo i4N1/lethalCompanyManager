@@ -12,7 +12,7 @@ names = ['MoreCompany', 'ReservedItemSlotCore', 'ReservedFlashlightSlot', 'Reser
 home_dir = str(Path.home())
 mods_dir = home_dir + '\\modero\\'
 unzipped = f'{mods_dir}unzipped\\'
-plugins = f'{unzipped}\\BepInEx\\plugins\\'
+plugins = f'{unzipped}BepInEx\\plugins\\'
 def downloadMods(namespace, name):
     home_dir = f'{mods_dir}{name}.zip'
     r = requests.get(f'{url}{namespace}/{name}/')
