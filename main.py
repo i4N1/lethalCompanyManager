@@ -12,6 +12,7 @@ namespaces = ['notnotnotswipez', 'FlipMods', 'FlipMods', 'FlipMods', 'RugbugRedf
 names = ['MoreCompany', 'ReservedItemSlotCore', 'ReservedFlashlightSlot', 'ReservedWalkieSlot', 'Skinwalkers']
 mods_dir = '/tmp/lethalModManager/'
 plugins = f'{mods_dir}BepInEx/plugins/'
+
 def downloadMods(namespace, name):
     mod_dir = f'{mods_dir}{name}.zip'
     r = requests.get(f'{url}{namespace}/{name}/')
@@ -30,6 +31,7 @@ def downloadMods(namespace, name):
             file.write(rdown.content)
     else:
         print(f"Error, status code: {r.status_code}.")
+        
 def unzipMods():
     print(mods_dir)
     for zip in os.listdir(mods_dir):
@@ -43,9 +45,10 @@ def unzipMods():
                 os.rename(os.path.join(mods_dir, dll), os.path.join(plugins, dll))
             except FileExistsError:
                 log.failure(f"{dll} already exists in {plugins}...")
+                
 def main():
     for namespace, name in zip(namespaces, names):
-        threading.Thread(target=downloadMods, args=(namespace, name)).start()
+        Thread(target=downloadMods, args=(namespace, name)).start()
     unzipMods()
 
 if __name__ == "__main__":
