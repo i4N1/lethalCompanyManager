@@ -28,7 +28,7 @@ def downloadMods(namespace, name):
         download_url = latest["download_url"]
         p = log.progress(f'Downloading {name}... ')
         try:
-            rdown = requests.get(download_url, allow_redirects=True)
+            rdown = requests.get(download_url)
             p.success("\t\tDownload successful!")
         except:
             p.failure(f"Failed to download {name} ({download_url})")
