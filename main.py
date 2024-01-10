@@ -5,6 +5,7 @@ import json
 import re
 from pathlib import Path
 from pwn import log
+from threading import Thread
 
 url = 'https://thunderstore.io/api/experimental/package/'
 namespaces = ['notnotnotswipez', 'FlipMods', 'FlipMods', 'FlipMods', 'RugbugRedfern']
@@ -44,6 +45,8 @@ def unzipMods():
                 log.failure(f"{dll} already exists in {plugins}...")
 def main():
     for namespace, name in zip(namespaces, names):
-        downloadMods(namespace, name)
+        threading.Thread(target=downloadMods, args=(namespace, name)).start()
     unzipMods()
-main()
+
+if __name__ == "__main__":
+    main()
