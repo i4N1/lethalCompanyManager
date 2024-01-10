@@ -40,8 +40,10 @@ def unzipMods():
                 unzipping.extractall(unzipped)
     for dll in os.listdir(unzipped):
         if dll.endswith('.dll'):
-            print(dll)
-            os.rename(os.path.join(unzipped, dll), os.path.join(plugins, dll))
+            try:
+                os.rename(os.path.join(unzipped, dll), os.path.join(plugins, dll))
+            except FileExistsError:
+                log.failure(f"{dll} already exists in {plugins}...")
 def main():
     for namespace, name in zip(namespaces, names):
         downloadMods(namespace, name)
