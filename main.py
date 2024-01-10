@@ -10,8 +10,8 @@ from threading import Thread
 # Settings
 
 url = 'https://thunderstore.io/api/experimental/package/'
-namespaces = ['notnotnotswipez', 'FlipMods', 'FlipMods', 'FlipMods', 'RugbugRedfern']
-names = ['MoreCompany', 'ReservedItemSlotCore', 'ReservedFlashlightSlot', 'ReservedWalkieSlot', 'Skinwalkers']
+namespaces = ['notnotnotswipez', 'FlipMods', 'FlipMods', 'FlipMods', 'RugbugRedfern', '2018']
+names = ['MoreCompany', 'ReservedItemSlotCore', 'ReservedFlashlightSlot', 'ReservedWalkieSlot', 'Skinwalkers', 'LC_API']
 mods_dir = '/tmp/lethalModManager/'
 plugins = f'{mods_dir}BepInEx/plugins/'
 
