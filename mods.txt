@@ -1,0 +1,5 @@
+notnotnotswipez/MoreCompany
+FlipMods/ReservedItemSlotCore
+FlipMods/ReservedFlashlightSlot
+FlipMods/ReservedWalkieSlot
+RugbugRedfern/Skinwalkers
