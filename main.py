@@ -17,12 +17,18 @@ def updateMod(namespace, name):
         latest = json.loads(latest)
         download_url = latest["download_url"]
         rdown = requests.get(url, allow_redirects=True)
-        save = open(f'{home_dir}/Downloads/{name}.zip', 'wb').write(rdown.content)
+        with open(f'{home_dir}')
+        #save = open(f'{home_dir}Baixades/{name}.zip', 'wb').write(rdown.content)
         print(download_url)
+        print(save)
     else:
         print(f"Error, status code: {r.status_code}.")
+
+#def uploadMod(name):
+   # mods_dir =
 def main():
     for namespace, name in zip(namespaces, names):
         updateMod(namespace, name)
-
+    #for mod in names:
+     #
 main()
