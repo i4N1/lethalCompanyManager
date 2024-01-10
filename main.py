@@ -1,20 +1,19 @@
 import zipfile
 import os
 import requests
-import time
 import json
 import re
 from pathlib import Path
 
+url = 'https://thunderstore.io/api/experimental/package/'
 namespaces = ['notnotnotswipez', 'FlipMods', 'FlipMods', 'FlipMods', 'RugbugRedfern']
 names = ['MoreCompany', 'ReservedItemSlotCore', 'ReservedFlashlightSlot', 'ReservedWalkieSlot', 'Skinwalkers']
 home_dir = str(Path.home())
 mods_dir = home_dir + '\\modero\\'
-
+unzipped = f'{mods_dir}\\unzipped\\'
+plugins = f'{unzipped}\\BepInEx\\plugins\\'
 def downloadMods(namespace, name):
-    home_dir = str(Path.home())
-    home_dir = home_dir + '\\modero\\' + name + '.zip'
-    url = 'https://thunderstore.io/api/experimental/package/'
+    home_dir = f'{mods_dir}{name}.zip'
     r = requests.get(f'{url}{namespace}/{name}/')
     if r.status_code == 200:
         match = re.search(r'"latest":\s*({[^}]+})', r.text)
@@ -33,11 +32,11 @@ def unzipMods():
         if zip.endswith(".zip"):
             zip_path = os.path.join(mods_dir, zip)
             with zipfile.ZipFile(zip_path, 'r') as unzipping:
-                unzipping.extractall(f'{mods_dir}\\unzipped\\')
-    for dll in os.listdir(f'{mods_dir}\\unzipped'):
+                unzipping.extractall(unzipped)
+    for dll in os.listdir(unzipped):
         if dll.endswith('.dll'):
             print(dll)
-            os.rename(f'{mods_dir}unzipped\\{dll}', f'{mods_dir}unzipped\\BepInEx\\plugins\\{dll}')
+            os.rename(f'{os.path.join(unzipped, dll)}', f'{os.path.join(plugins, dll)}')
 def main():
     for namespace, name in zip(namespaces, names):
         downloadMods(namespace, name)
