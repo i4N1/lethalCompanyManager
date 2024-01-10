@@ -4,13 +4,14 @@ import requests
 import json
 import re
 from pathlib import Path
+from pwn import log
 
 url = 'https://thunderstore.io/api/experimental/package/'
 namespaces = ['notnotnotswipez', 'FlipMods', 'FlipMods', 'FlipMods', 'RugbugRedfern']
 names = ['MoreCompany', 'ReservedItemSlotCore', 'ReservedFlashlightSlot', 'ReservedWalkieSlot', 'Skinwalkers']
 home_dir = str(Path.home())
 mods_dir = home_dir + '\\modero\\'
-unzipped = f'{mods_dir}\\unzipped\\'
+unzipped = f'{mods_dir}unzipped\\'
 plugins = f'{unzipped}\\BepInEx\\plugins\\'
 def downloadMods(namespace, name):
     home_dir = f'{mods_dir}{name}.zip'
@@ -20,10 +21,14 @@ def downloadMods(namespace, name):
         latest = match.group(1)
         latest = json.loads(latest)
         download_url = latest["download_url"]
-        rdown = requests.get(download_url, allow_redirects=True)
+        p = log.progress(f'Downloading {name} from: {download_url}')
+        try:
+            rdown = requests.get(download_url, allow_redirects=True)
+            p.success("\n\tDownload successful.")
+        except:
+            p.failure(f"Failed to download {name} ({download_url})")
         with open(home_dir, 'wb') as file:
             file.write(rdown.content)
-        print(download_url)
     else:
         print(f"Error, status code: {r.status_code}.")
 def unzipMods():
@@ -36,7 +41,7 @@ def unzipMods():
     for dll in os.listdir(unzipped):
         if dll.endswith('.dll'):
             print(dll)
-            os.rename(f'{os.path.join(unzipped, dll)}', f'{os.path.join(plugins, dll)}')
+            os.rename(os.path.join(unzipped, dll), os.path.join(plugins, dll))
 def main():
     for namespace, name in zip(namespaces, names):
         downloadMods(namespace, name)
