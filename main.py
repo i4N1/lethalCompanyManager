@@ -57,6 +57,8 @@ def clearFiles():
             os.remove(mods_dir + file)
 
 def main():
+    if not os.path.isdir(mods_dir):
+        os.makedirs(mods_dir)
     for namespace, name in zip(namespaces, names):
         t = Thread(target=downloadMods, args=(namespace, name))
         t.start()
