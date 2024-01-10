@@ -49,4 +49,6 @@ def main():
     for namespace, name in zip(namespaces, names):
         threading.Thread(target=downloadMods, args=(namespace, name)).start()
     unzipMods()
-main()
+
+if __name__ == "__main__":
+    main()
