@@ -10,14 +10,13 @@ from threading import Thread
 # Settings
 
 url = 'https://thunderstore.io/api/experimental/package/'
-namespaces = ['notnotnotswipez', 'FlipMods', 'FlipMods', 'FlipMods', 'RugbugRedfern']
-names = ['MoreCompany', 'ReservedItemSlotCore', 'ReservedFlashlightSlot', 'ReservedWalkieSlot', 'Skinwalkers']
 mods_dir = '/tmp/lethalModManager/'
 plugins = f'{mods_dir}BepInEx/plugins/'
 
 # Algo variables.
 
 threads = []
+mods = []
 
 def downloadMods(namespace, name):
     mod_dir = f'{mods_dir}{name}.zip'
@@ -74,10 +73,12 @@ def moveZippedFile():
 def main():
     if not os.path.isdir(mods_dir):
         os.makedirs(mods_dir)
-    for namespace, name in zip(namespaces, names):
-        t = Thread(target=downloadMods, args=(namespace, name))
-        t.start()
-        threads.append(t)
+    with open("mods.txt", "r") as modsfile:
+        content = modsfile.read().splitlines()
+        for mod in content:
+            t = Thread(target=downloadMods, args=(mod.split("/")[0], mod.split("/")[1]))
+            t.start()
+            threads.append(t)
     for thread in threads:
         thread.join() # Lock program until all threads have finished.
     unzipMods() # Unzips all downloaded mods and adds them up into BepInEx
