@@ -16,6 +16,7 @@ mods_dir = '/tmp/lethalModManager/'
 plugins = f'{mods_dir}BepInEx/plugins/'
 
 # Algo variables.
+
 threads = []
 
 def downloadMods(namespace, name):
