@@ -6,7 +6,7 @@ import time
 from pathlib import Path
 from pwn import log
 from threading import Thread
-import datetime
+from datetime import datetime
 
 # Settings
 
@@ -28,7 +28,7 @@ if os.name == 'nt': # Windows
     plugins = f'{mods_dir}BepInEx/plugins/'
 
 def downloadMods(namespace, name):
-    print(datetime.now())
+    print(str(datetime.now()))
     print('-'*25)
     mod_dir = f'{mods_dir}{name}.zip'
     r = requests.get(f'{url}{namespace}/{name}/')
@@ -80,7 +80,7 @@ def moveZippedFile():
     p = log.progress(f'Moving files... ')
     os.rename(mods_dir+"BepInEx.zip", uploads_path+"BepInEx.zip")
     p.success("Done!")
-    print(datetime.now())
+    print(str(datetime.now()))
     print('-'*25)
 
 def main():
