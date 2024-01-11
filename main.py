@@ -29,6 +29,7 @@ if os.name == 'nt': # Windows
 
 def downloadMods(namespace, name):
     print(datetime.now())
+    print('-'*25)
     mod_dir = f'{mods_dir}{name}.zip'
     r = requests.get(f'{url}{namespace}/{name}/')
     if r.status_code == 200:
