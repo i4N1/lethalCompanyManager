@@ -53,8 +53,9 @@ def downloadAndExtract(gamePath):
             unzipping.extractall(gamePath+r"/BepInEx")
         os.remove(zip_path)
         Label(uiRoot, text="Se han actualizado todos los mods!", font=("Verdana",12)).pack(anchor=CENTER)
-    except:
+    except Exception as e:
         Label(uiRoot, text="Ha ocurrido un error, mira la consola para más detalles.", font=("Verdana",12)).pack(anchor=CENTER)
+        print(e)
     Button(uiRoot, text="OK", command=exit).pack(anchor=CENTER)
 
 def pathSelected(gamePath):
