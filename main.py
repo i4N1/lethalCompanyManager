@@ -11,7 +11,9 @@ from threading import Thread
 
 url = 'https://thunderstore.io/api/experimental/package/'
 mods_dir = '/tmp/lethalModManager/'
+win_mods_dir = './tmp/lethalModManager/' # This is for debugging meanings, the script is not meant to be used in windows but just in case.
 plugins = f'{mods_dir}BepInEx/plugins/'
+uploads_path = '/var/www/metacalled.tech/cdn.metacalled.tech/public/uploads/'
 
 # Algo variables.
 
@@ -67,10 +69,12 @@ def clearFiles():
 
 def moveZippedFile():
     p = log.progress(f'Moving files... ')
-    os.rename(mods_dir+"BepInEx.zip", "/var/www/metacalled.tech/cdn.metacalled.tech/public/uploads/BepInEx.zip")
+    os.rename(mods_dir+"BepInEx.zip", uploads_path+"BepInEx.zip")
     p.success("Done!")
 
 def main():
+    if os.name == 'nt': # For windows users.
+        mods_dir = win_mods_dir 
     if not os.path.isdir(mods_dir):
         os.makedirs(mods_dir)
     with open("mods.txt", "r") as modsfile:
