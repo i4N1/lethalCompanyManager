@@ -73,6 +73,7 @@ def moveZippedFile():
     p.success("Done!")
 
 def main():
+    global mods_dir
     if os.name == 'nt': # For windows users.
         mods_dir = win_mods_dir 
     if not os.path.isdir(mods_dir):
