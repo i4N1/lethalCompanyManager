@@ -36,8 +36,8 @@ def updateMods():
 
 #GUI Buttons
 updateButton = customtkinter.CTkButton(app, text="Update mods", command=updateMods)
-updateButton.grid(row=0, column=0, padx=10, pady=10)
+updateButton.grid(row=0, column=0, padx=(100,0), pady=10)
 locationButton = customtkinter.CTkButton(app, text="...",fg_color="gray" , command=browseButton)
-locationButton.grid(row=0, column=1, padx=10, pady=10)
+locationButton.grid(row=0, column=1, padx=(10,0), pady=10)
 
 app.mainloop()
