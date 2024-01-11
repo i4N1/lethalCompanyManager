@@ -28,8 +28,6 @@ if os.name == 'nt': # Windows
     plugins = f'{mods_dir}BepInEx/plugins/'
 
 def downloadMods(namespace, name):
-    print(str(datetime.now()))
-    print('-'*25)
     mod_dir = f'{mods_dir}{name}.zip'
     r = requests.get(f'{url}{namespace}/{name}/')
     if r.status_code == 200:
@@ -80,10 +78,11 @@ def moveZippedFile():
     p = log.progress(f'Moving files... ')
     os.rename(mods_dir+"BepInEx.zip", uploads_path+"BepInEx.zip")
     p.success("Done!")
-    print(str(datetime.now()))
-    print('-'*25)
 
 def main():
+    print('-'*50)
+    print(str(datetime.now()))
+    print('-'*50)
     if not os.path.isdir(mods_dir):
         os.makedirs(mods_dir)
     with open("mods.txt", "r") as modsfile:
@@ -98,6 +97,9 @@ def main():
     clearFiles() # Clear all files from the folder except BepInExzipBepInEx()
     zipBepInEx()
     moveZippedFile()
+    print('-'*50)
+    print(str(datetime.now()))
+    print('-'*50)
 
 if __name__ == "__main__":
     main()
