@@ -6,9 +6,6 @@ from tkinter import *
 from tkinter import filedialog
 from configparser import ConfigParser
 
-# Settings
-remote_url = 'https://cdn.metacalled.tech/uploads/BepInEx.zip'
-
 # Algo variables
 
 uiRoot = Tk()
@@ -22,27 +19,46 @@ def checkConfig():
     if not os.path.isfile("config.ini"):
         with open('config.ini', 'w') as conf:
             config_object['AppConfig'] = {
-                "gamePath": "None"
+                "gamePath": "None",
+                "remoteServer": "None",
+                "alternativeDownload": False
             }
             config_object.write(conf)
             conf.close()
-        return ""
+        return [None,None,None]
     else:
         config_object.read("config.ini")
-        return str(config_object["AppConfig"]["gamePath"])
+        return [config_object["AppConfig"]["gamePath"], config_object["AppConfig"]["remoteServer"], config_object["AppConfig"]["alternativeDownload"]]
 
-def openFolder():
-    directory = filedialog.askdirectory()
+def setRemoteURL(currentSettings):
+    clearWidgets()
+    button_pressed = StringVar()
+    checkbox_value = BooleanVar()
+    Label(uiRoot, text="Introduce el URL de donde se va a descargar el archivo.", font=("Verdana",12)).pack(anchor=CENTER)
+    url = Entry(uiRoot, width=600)
+    url.pack(anchor=CENTER)
+    checkbox = Checkbutton(uiRoot, variable=checkbox_value, text="Alternative mode")
+    checkbox.pack(anchor=CENTER)
+    boton = Button(uiRoot, text="OK", command=lambda: button_pressed.set("ok"))
+    boton.pack(anchor=CENTER)
+    boton.wait_variable(button_pressed)
     with open('config.ini', 'w') as conf:
         config_object['AppConfig'] = {
-            "gamePath": directory
+                "gamePath": currentSettings[0],
+                "remoteServer": url.get(),
+                "alternativeDownload": checkbox_value.get()
         }
         config_object.write(conf)
         conf.close()
-    gamePath = checkConfig()
-    pathSelected(gamePath)
+    currentSettings[1] = url.get()
+    pathSelected(currentSettings)
 
-def downloadAndExtract(gamePath):
+def openFolder(currentSettings):
+    directory = filedialog.askdirectory()
+    currentSettings[0] = directory
+    setRemoteURL(currentSettings)
+
+def downloadAndExtract(gamePath, remote_url):
     clearWidgets()
     try:
         r = requests.get(remote_url)
@@ -58,24 +74,28 @@ def downloadAndExtract(gamePath):
         print(e)
     #Button(uiRoot, text="OK", command=exit()).pack(anchor=CENTER)
 
-def pathSelected(gamePath):
+def pathSelected(currentSettings):
     clearWidgets()
-    uiRoot.geometry("500x100")
+    gamePath = currentSettings[0]
+    if currentSettings[2]:
+        URL = requests.get(currentSettings[1]).content
+    else:
+        URL = currentSettings[1]
     Label(uiRoot, text="Path seleccionado: " + gamePath, font=("Verdana",12)).pack(anchor=CENTER)
     Label(uiRoot, text="Ya está todo listo, presiona UPDATE para actualizar los mods.", font=("Verdana",10)).pack(anchor=CENTER)
-    Button(uiRoot, text="UPDATE", command=lambda: downloadAndExtract(gamePath)).pack(anchor=CENTER)
-    Button(uiRoot, text="...", command=openFolder).pack(anchor=E)
+    Button(uiRoot, text="UPDATE", command=lambda: downloadAndExtract(gamePath, URL)).pack(anchor=CENTER)
+    Button(uiRoot, text="...", command=lambda: openFolder(currentSettings)).pack(anchor=E)
 
 def main():
     uiRoot.title("Lethal Company Manager")
     uiRoot.resizable(False, False)
-    gamePath = checkConfig()
-    if gamePath == "" or gamePath == "None":
-        uiRoot.geometry("650x75")
+    currentSettings = checkConfig()
+    uiRoot.geometry("650x100")
+    if currentSettings[0] == None:
         Label(uiRoot, text="Presiona select y selecciona la carpeta base del juego.", font=("Verdana",12)).pack(anchor=CENTER)
-        Button(uiRoot, text="SELECT", command=openFolder).pack(anchor=CENTER)
+        Button(uiRoot, text="SELECT", command=lambda: openFolder(currentSettings)).pack(anchor=CENTER)
     else:
-        pathSelected(gamePath)
+        pathSelected(currentSettings)
         
     
     
