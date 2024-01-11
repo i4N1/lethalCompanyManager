@@ -20,6 +20,12 @@ uploads_path = '/var/www/metacalled.tech/cdn.metacalled.tech/public/uploads/'
 threads = []
 mods = []
 
+# Checking OS.
+
+if os.name == 'nt': # Windows
+    mods_dir = win_mods_dir
+    plugins = f'{mods_dir}BepInEx/plugins/'
+
 def downloadMods(namespace, name):
     mod_dir = f'{mods_dir}{name}.zip'
     r = requests.get(f'{url}{namespace}/{name}/')
@@ -73,9 +79,6 @@ def moveZippedFile():
     p.success("Done!")
 
 def main():
-    global mods_dir
-    if os.name == 'nt': # For windows users.
-        mods_dir = win_mods_dir 
     if not os.path.isdir(mods_dir):
         os.makedirs(mods_dir)
     with open("mods.txt", "r") as modsfile:
