@@ -44,14 +44,17 @@ def openFolder():
 
 def downloadAndExtract(gamePath):
     clearWidgets()
-    r = requests.get(remote_url)
-    zip_path = gamePath+r"/BepInEx.zip"
-    with open(zip_path, 'wb') as file:
-        file.write(r.content)
-    with zipfile.ZipFile(zip_path, 'r') as unzipping:
-        unzipping.extractall(gamePath+r"/BepInEx")
-    os.remove(zip_path)
-    Label(uiRoot, text="Se han actualizado todos los mods!", font=("Verdana",12)).pack(anchor=CENTER)
+    try:
+        r = requests.get(remote_url)
+        zip_path = gamePath+r"/BepInEx.zip"
+        with open(zip_path, 'wb') as file:
+            file.write(r.content)
+        with zipfile.ZipFile(zip_path, 'r') as unzipping:
+            unzipping.extractall(gamePath+r"/BepInEx")
+        os.remove(zip_path)
+        Label(uiRoot, text="Se han actualizado todos los mods!", font=("Verdana",12)).pack(anchor=CENTER)
+    except:
+        Label(uiRoot, text="Ha ocurrido un error, mira la consola para más detalles.", font=("Verdana",12)).pack(anchor=CENTER)
     Button(uiRoot, text="OK", command=exit).pack(anchor=CENTER)
 
 def pathSelected(gamePath):
