@@ -64,6 +64,7 @@ def pathSelected(gamePath):
     Label(uiRoot, text="Path seleccionado: " + gamePath, font=("Verdana",12)).pack(anchor=CENTER)
     Label(uiRoot, text="Ya está todo listo, presiona UPDATE para actualizar los mods.", font=("Verdana",10)).pack(anchor=CENTER)
     Button(uiRoot, text="UPDATE", command=lambda: downloadAndExtract(gamePath)).pack(anchor=CENTER)
+    Button(uiRoot, text="...", command=openFolder).pack(anchor=E)
 
 def main():
     uiRoot.title("Lethal Company Manager")
