@@ -1,7 +1,6 @@
 import requests
 import customtkinter
 from customtkinter import filedialog
-import os
 from pathlib import Path
 import zipfile
 
