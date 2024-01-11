@@ -72,7 +72,7 @@ def downloadAndExtract(gamePath, remote_url):
     except Exception as e:
         Label(uiRoot, text="Ha ocurrido un error, mira la consola para más detalles.", font=("Verdana",12)).pack(anchor=CENTER)
         print(e)
-    #Button(uiRoot, text="OK", command=exit()).pack(anchor=CENTER)
+    Button(uiRoot, text="OK", command=exit).pack(anchor=CENTER)
 
 def pathSelected(currentSettings):
     clearWidgets()
