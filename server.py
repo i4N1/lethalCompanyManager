@@ -34,7 +34,8 @@ def downloadMods(namespace, name):
         match = re.search(r'"latest":\s*({[^}]+})', r.text)
         latest = r.json()["latest"]
         download_url = latest["download_url"]
-        p = log.progress(f'Downloading {name}... ')
+        version = latest["version_number"]
+        p = log.progress(f'Downloading {name} ({version})... ')
         try:
             rdown = requests.get(download_url, allow_redirects=True)
             p.success("\t\tDownload successful!")
