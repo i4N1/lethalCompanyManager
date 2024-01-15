@@ -47,7 +47,7 @@ def downloadMods(namespace, name):
             file.write(rdown.content)
     else:
         print(f"Error, status code: {r.status_code}.")
-        
+
 def unzipMods():
     for zip in os.listdir(mods_dir):
         if zip.endswith(".zip"):
@@ -74,7 +74,7 @@ def clearFiles():
     p = log.progress(f'Clearing all files... ')
     for file in os.listdir(mods_dir):
         if file != "BepInEx":
-            if os.path.isdir(file):
+            if os.path.isdir(mods_dir + file):
                 shutil.rmtree(mods_dir + file)
             else:
                 os.remove(mods_dir + file)
