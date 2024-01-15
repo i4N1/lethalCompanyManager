@@ -1,4 +1,5 @@
 #!/usr/bin/env python3
+import shutil
 import zipfile
 import os
 import requests
@@ -73,7 +74,10 @@ def clearFiles():
     p = log.progress(f'Clearing all files... ')
     for file in os.listdir(mods_dir):
         if file != "BepInEx":
-            os.remove(mods_dir + file)
+            if os.path.isdir(file):
+                shutil.rmtree(mods_dir + file)
+            else:
+                os.remove(mods_dir + file)
     p.success("Done!")
 
 def moveZippedFile():
