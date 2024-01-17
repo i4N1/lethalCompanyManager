@@ -70,7 +70,7 @@ def zipBepInEx():
                 relative_path = os.path.relpath(file_path, mods_dir+"BepInEx")
                 zipf.write(file_path, arcname=relative_path)
             for subfolder in subfolders:
-                subfolder_path = os.path.join(folder, subfolder)
+                subfolder_path = os.path.join(foldername, subfolder)
                 relative_path = os.path.relpath(subfolder_path, mods_dir+"BepInEx")
                 zipf.write(subfolder_path, arcname=relative_path)
     p.success("Done!")
