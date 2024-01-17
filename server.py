@@ -66,7 +66,7 @@ def zipBepInEx():
     with zipfile.ZipFile(mods_dir+"BepInEx.zip", 'w', zipfile.ZIP_DEFLATED) as zipf:
         for foldername, subfolders, filenames in os.walk(mods_dir+"BepInEx"):
             for filename in filenames:
-                file_path: os.path.join(foldername, filename)
+                file_path = os.path.join(foldername, filename)
                 relative_path = os.path.relpath(file_path, mods_dir+"BepInEx")
                 zipf.write(file_path, arcname=relative_path)
     p.success("Done!")
