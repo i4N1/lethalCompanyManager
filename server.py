@@ -69,6 +69,10 @@ def zipBepInEx():
                 file_path = os.path.join(foldername, filename)
                 relative_path = os.path.relpath(file_path, mods_dir+"BepInEx")
                 zipf.write(file_path, arcname=relative_path)
+            for subfolder in subfolders:
+                subfolder_path = os.path.join(folder, subfolder)
+                relative_path = os.path.relpath(subfolder_path, mods_dir+"BepInEx")
+                zipf.write(subfolder_path, arcname=relative_path)
     p.success("Done!")
 
 def clearFiles():
