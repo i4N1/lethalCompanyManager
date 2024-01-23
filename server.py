@@ -17,7 +17,7 @@ mods_dir = '/tmp/lethalModManager/'
 win_mods_dir = './tmp/lethalModManager/' # This is for debugging meanings, the script is not meant to be used in windows but just in case.
 plugins = f'{mods_dir}BepInEx/plugins/'
 uploads_path = '/var/www/metacalled.tech/cdn.metacalled.tech/public/uploads/'
-
+backup_zip = '/root/bkp/BepInEx.zip'
 # Algo variables.
 
 threads = []
@@ -57,28 +57,34 @@ def unzipMods():
     for dll in os.listdir(mods_dir):
         if dll.endswith('.dll'):
             try:
-                os.rename(os.path.join(mods_dir, dll), os.path.join(plugins, dll))
+                if dll == 'winhttp.dll':
+                    pass
+                else:
+                    os.rename(os.path.join(mods_dir, dll), os.path.join(plugins, dll))
             except FileExistsError:
                 log.failure(f"{dll} already exists in {plugins}...")
 
 def zipBepInEx():
     p = log.progress(f'Zipping BepInEx folder... ')
     with zipfile.ZipFile(mods_dir+"BepInEx.zip", 'w', zipfile.ZIP_DEFLATED) as zipf:
+        zipf.write(mods_dir + "BepInEx", arcname="BepInEx")
         for foldername, subfolders, filenames in os.walk(mods_dir+"BepInEx"):
             for filename in filenames:
                 file_path = os.path.join(foldername, filename)
-                relative_path = os.path.relpath(file_path, mods_dir+"BepInEx")
+                relative_path = os.path.relpath(file_path, mods_dir)
                 zipf.write(file_path, arcname=relative_path)
-            for subfolder in subfolders:
-                subfolder_path = os.path.join(foldername, subfolder)
-                relative_path = os.path.relpath(subfolder_path, mods_dir+"BepInEx")
-                zipf.write(subfolder_path, arcname=relative_path)
+        for foldername, subfolders, filenames in os.walk(mods_dir):
+            for filename in filenames:
+                if filename == 'doorstop_config.ini' or filename == 'winhttp.dll':
+                    file_path = os.path.join(mods_dir, filename)
+                    if os.path.exists(file_path):
+                        zipf.write(file_path, arcname=os.path.basename(file_path))
     p.success("Done!")
 
 def clearFiles():
     p = log.progress(f'Clearing all files... ')
     for file in os.listdir(mods_dir):
-        if file != "BepInEx":
+        if file != "BepInEx" or file != "BepInEx.zip":
             if os.path.isdir(mods_dir + file):
                 shutil.rmtree(mods_dir + file)
             else:
@@ -89,11 +95,17 @@ def moveZippedFile():
     p = log.progress(f'Moving files... ')
     os.rename(mods_dir+"BepInEx.zip", uploads_path+"BepInEx.zip")
     p.success("Done!")
-
 def main():
     print('-'*50)
     print(str(datetime.now()))
     print('-'*50)
+    if not os.path.exists(mods_dir + 'BepInEx.zip'):
+        try:
+            shutil.copy(backup_zip, mods_dir)
+        except FileNotFoundError:
+            log.failure(f"Backup zip seems to not exist at: {backup_zip}")
+            log.progress(f"Copying zip from {uploads_path} instead...")
+            shutil.copy(uploads_path + 'BepInEx.zip', mods_dir)
     if not os.path.isdir(mods_dir):
         os.makedirs(mods_dir)
     with open("mods.txt", "r") as modsfile:
@@ -105,9 +117,9 @@ def main():
     for thread in threads:
         thread.join() # Lock program until all threads have finished.
     unzipMods() # Unzips all downloaded mods and adds them up into BepInEx
-    clearFiles() # Clear all files from the folder except BepInExzipBepInEx()
     zipBepInEx()
     moveZippedFile()
+    clearFiles()
     print('-'*50)
     print(str(datetime.now()))
     print('-'*50)
